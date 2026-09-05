@@ -1,0 +1,34 @@
+[package]
+org = "ores-wasm-loaders"
+name = "owl-infra"
+version = "0.1.0"
+kind = "infra"
+language = "terraform"
+description = "ORES Wasm Loaders: the hosting rules the loading layer depends on"
+license = "MIT"
+
+[package.repository]
+vcs = "git"
+url = "https://github.com/ores-wasm-loaders/owl-infra"
+
+[dependencies]
+
+
+[build]
+command = "node --test test/*.test.mjs"
+
+[publish]
+include_readme = true
+tag_format = "v{version}"
+exclude = [".env", ".env.*", ".vendor/**", ".zed/**", ".zed-pack/**", "tmp/**", "**/*.log", ".DS_Store", "**/target/**", "**/node_modules/**", "**/dist/**"]
+
+[install]
+dir = ".vendor/.zed"
+
+[targets.repository]
+dir = "."
+
+
+
+[scripts]
+test = "node --test test/*.test.mjs"
