@@ -1,0 +1,36 @@
+# Cloudflare Pages / Workers Sites header rules for a release CDN.
+#
+# The layout these rules assume:
+#   /assets/releases/<releaseId>/...   immutable, cached forever
+#   /assets/releases/<releaseId>/owl-manifest.json   the pointer that moves
+#
+# Wrong content types and missing cache headers are the two hosting mistakes that make a
+# correct loader look slow, so they are pinned here rather than left to defaults.
+
+/assets/releases/*/*.wasm
+  Content-Type: application/wasm
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/releases/*/*.js
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/releases/*/*.mjs
+  Content-Type: text/javascript; charset=utf-8
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/releases/*/*.css
+  Content-Type: text/css; charset=utf-8
+  Cache-Control: public, max-age=31536000, immutable
+
+# The manifest is how a page learns which release is current: it must be revalidated.
+/assets/releases/*/owl-manifest.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=60, must-revalidate
+
+# Cross-origin isolation is applied ONLY to the app paths of products whose release declares
+# requiresCrossOriginIsolation (Flutter's multi-threaded renderer). Applying it site-wide
+# breaks unrelated third-party embeds on the marketing pages for no benefit.
+/app/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: credentialless
